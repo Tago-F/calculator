@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <link rel="stylesheet" href="/style.css">
+  <title>CALCULATOR</title>
+</head>
+<body>
+  <form name="calculator">
+    <table>
+      <!---液晶画面--->
+      <tr>
+        <td colspan="4">
+          <input type="text" class="display" name="display" id="display" th:value="${display}" disabled>
+        </td>
+      </tr>
+
+      <!---上から１段目（7〜9+÷)--->
+      <tr>
+        <td><input type="button" value="7" onclick="appendToDisplay(this.value)"></td>
+        <td><input type="button" value="8" onclick="appendToDisplay(this.value)"></td>
+        <td><input type="button" value="9" onclick="appendToDisplay(this.value)"></td>
+        <td><input type="button" value="÷" class="operator" name="div_btn" onclick="appendToDisplay('/')"></td>
+      </tr>
+
+      <!---上から２段目(4〜６+×)--->
+      <tr>
+        <td><input type="button" value="4" onclick="appendToDisplay(this.value)"></td>
+        <td><input type="button" value="5" onclick="appendToDisplay(this.value)"></td>
+        <td><input type="button" value="6" onclick="appendToDisplay(this.value)"></td>
+        <td><input type="button" value="×" class="operator" name="multi_btn" onclick="appendToDisplay('*')"></td>
+      </tr>
+
+      <!---上から３段目(1〜3+-)--->
+      <tr>
+        <td><input type="button" value="1" onclick="appendToDisplay(this.value)"></td>
+        <td><input type="button" value="2" onclick="appendToDisplay(this.value)"></td>
+        <td><input type="button" value="3" onclick="appendToDisplay(this.value)"></td>
+        <td><input type="button" value="-" class="operator" onclick="appendToDisplay(this.value)"></td>
+      </tr>
+
+      <!---上から4段目(0/C/=/+)--->
+      <tr>
+        <td><input type="button" value="C" onclick="clearDisplay()"></td>
+        <td><input type="button" value="0" onclick="appendToDisplay(this.value)"></td>
+        <td><input type="button" value="=" class="equal" onclick="submitExpression()"></td>
+        <td><input type="button" value="+" class="operator" onclick="appendToDisplay(this.value)"></td>
+      </tr>
+    </table>
+    <script src="/script.js"></script>
+  </form>
+</body>
+</html>
