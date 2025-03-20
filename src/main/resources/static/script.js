@@ -10,10 +10,7 @@ function appendToDisplay(value) {
     // ディスプレイの式の最後の文字列を取得
     var displayLastChar = display.value.slice(-1);
 
-    // ディスプレイが初期状態の 0 なら、0 を削除する
-    if (display.value === "0") {
-        display.value = "";
-    }
+    display.value = deleteZero(display.value)
 
     // ディスプレイに文字列を追加する
     if (isNumeric(value)) {
@@ -22,6 +19,18 @@ function appendToDisplay(value) {
         // 演算子の場合は周辺に半角スペースを追加する
         display.value += " " + value + " ";
     }
+}
+
+/**
+ * 文字列が "0" の場合、文字列をリセットするメソッド
+ * @param {*} value 判定したい文字列
+ * @returns 空欄
+ */
+function deleteZero(value){
+    if (value === "0") {
+        value = "";
+    }
+    return value;
 }
 
 /**
