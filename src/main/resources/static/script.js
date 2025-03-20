@@ -10,6 +10,9 @@ let isZeroLastInput = false;
 // 前回の入力が "." かどうか
 let isCommaLastInput = false;
 
+// ディスプレイを取得
+let display = document.getElementById('display');
+
 /**
  * すべてのフラグをリセットするメソッド
  */
@@ -26,11 +29,8 @@ function resetFlags() {
  */
 function onNumberClick(value) {
 
-    // ディスプレイを取得
-    let display = document.getElementById('display');
-
     // ディスプレイ表示が計算結果なら、ディスプレイをクリア
-    display.value = clearResult(display.value);
+    display.value = removeResult(display.value);
 
     // ディスプレイの最初の文字が 0 なら、ディスプレイをクリア
     display.value = removeBeginningZero(display.value);
@@ -43,7 +43,8 @@ function onNumberClick(value) {
 
 function onZeroClick(value) {
 
-    let display = document.getElementById('display');
+    // ディスプレイ表示が計算結果なら、ディスプレイをクリア
+    display.value = removeResult(display.value);
 
     if (display.value === "0") {
         display.value = 0;
@@ -60,9 +61,6 @@ function onZeroClick(value) {
  * "=" ボタンをクリックした場合
  */
 function onEqualClick() {
-
-    // ディスプレイを取得
-    let display = document.getElementById('display');
 
     // ディスプレイから余分な空白を削除した式を取得
     let expression = display.value.trim();
@@ -82,8 +80,11 @@ function onEqualClick() {
  */
 function onOperatorClick(value) {
 
-    // ディスプレイを取得
-    let display = document.getElementById('display');
+    // ディスプレイ表示が計算結果なら、ディスプレイをクリア
+    display.value = removeResult(display.value);
+
+    // ディスプレイの最初の文字が 0 なら、ディスプレイをクリア
+    display.value = removeBeginningZero(display.value);
 
     // 演算子フラグが true の場合
     if (isOperatorLastInput) {
@@ -110,7 +111,11 @@ function onOperatorClick(value) {
  */
 function onCommaClick(value) {
 
-    let display = document.getElementById('display');
+    // ディスプレイ表示が計算結果なら、ディスプレイをクリア
+    display.value = removeResult(display.value);
+
+    // ディスプレイの最初の文字が 0 なら、ディスプレイをクリア
+    display.value = removeBeginningZero(display.value);
 
     if (!isCommaLastInput) {
         display.value += value;
@@ -123,8 +128,6 @@ function onCommaClick(value) {
 
 function onClearClick() {
 
-    let display = document.getElementById('display');
-
     display.value = "";
 
     resetFlags();
@@ -136,9 +139,13 @@ function onClearClick() {
  * @returns 空欄
  */
 function removeBeginningZero(value) {
+
     if (value.slice(0, 1) === "0") {
+
         return "";
+
     }
+
     return value;
 }
 
@@ -148,11 +155,16 @@ function removeBeginningZero(value) {
  * @param {*} value ディスプレイの表示
  * @returns 空欄
  */
-function clearResult(value) {
+function removeResult(value) {
+
     if (isResultDisplayed) {
+
         isResultDisplayed = false;
+
         return "";
+
     }
+
     return value;
 }
 
@@ -164,22 +176,32 @@ function submitExpression(expression) {
 
     // 式をバックエンドに送信
     fetch('/calculate', {
+
         // POST メソッドを使用
         method: 'POST',
+
         // JOSN 形式でリクエストヘッダーをバックエンドに送信
         headers: {
             'Content-Type': 'application/json'
         },
+
         // リクエストヘッダー "expression" に式の情報を入れる
         body: JSON.stringify({ expression: expression })
+
     })
         // レスポンスを JSON 形式で受け取る
         .then(response => response.json())
+
         .then(data => {
+
             // 計算結果をディスプレイに表示させる
             display.value = data.result;
+
         })
+
         .catch(error => {
+
             console.error('Error:', error);
+
         });
 }
