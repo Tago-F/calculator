@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,22 +34,40 @@ public class CalculatorController {
         // リクエストボディの "expression" の要素を取得
         String expression = request.get("expression");
 
-        // 計算結果の数値を取得
-        Double resultDoubleNum = calculatorService.evaluateExpression(expression);
+        try {
+            // 計算結果の数値を取得
+            Double resultDoubleNum = calculatorService.evaluateExpression(expression);
 
-        // 計算結果が整数であれば、余分な小数点を削除
-        Number resultNum = calculatorService.convertIfWholeNumber(resultDoubleNum);
+            // 計算結果が整数であれば、余分な小数点を削除
+            Number resultNum = calculatorService.convertIfWholeNumber(resultDoubleNum);
 
-        // 計算を実行し、結果を文字列として取得
-        String result = resultNum.toString();
+            // 計算を実行し、結果を文字列として取得
+            String result = resultNum.toString();
 
-        // レスポンスボディ用の Map を準備
-        Map<String, Object> response = new HashMap<>();
+            // レスポンスボディ用の Map を準備
+            Map<String, Object> response = new HashMap<>();
 
-        // レスポンスボディの "result" に計算結果をセット
-        response.put("result", result);
+            // レスポンスボディの "result" に計算結果をセット
+            response.put("result", result);
 
-        return response;
+            return response;
+        } catch (EmptyStackException e) {
+            // レスポンスボディ用の Map を準備
+            Map<String, Object> response = new HashMap<>();
+
+            // レスポンスボディの "result" にエラーメッセージをセット
+            response.put("result", "演算子が不正です。");
+
+            return response;
+        } catch (Exception e) {
+            // レスポンスボディ用の Map を準備
+            Map<String, Object> response = new HashMap<>();
+
+            // レスポンスボディの "result" にエラーメッセージをセット
+            response.put("result", "Unknown Error.");
+
+            return response;
+        }
     }
 
 }
