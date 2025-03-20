@@ -40,8 +40,8 @@
 
       <!---上から4段目(0/C/=/+)--->
       <tr>
-        <td><input type="button" value="C" onclick="clearDisplay()"></td>
-        <td><input type="button" value="0" onclick="appendToDisplay(this.value)"></td>
+        <td><input type="button" value="C" onclick="onClearClick()"></td>
+        <td><input type="button" value="0" onclick="onZeroClick(this.value)"></td>
         <td><input type="button" value="=" class="equal" onclick="onEqualClick()"></td>
         <td><input type="button" value="+" class="operator" onclick="onOperatorClick(this.value)"></td>
       </tr>

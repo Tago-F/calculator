@@ -21,29 +21,6 @@ function resetFlags() {
 }
 
 /**
- * ディスプレイに文字列を追加するメソッド
- * @param {*} value 追加する文字列
- */
-function appendToDisplay(value) {
-
-    // ディスプレイの式を取得
-    var display = document.getElementById('display');
-
-    // ディスプレイの式の最後の文字列を取得
-    var displayLastChar = display.value.slice(-1);
-
-    display.value = deleteZero(display.value)
-
-    // ディスプレイに文字列を追加する
-    if (isNumeric(value)) {
-        display.value += value;
-    } else {
-        // 演算子の場合は周辺に半角スペースを追加する
-        display.value += " " + value + " ";
-    }
-}
-
-/**
  * 数値ボタンをクリックした場合
  * @param {*} value クリックされたボタンの数値
  */
@@ -53,12 +30,30 @@ function onNumberClick(value) {
     let display = document.getElementById('display');
 
     // ディスプレイ表示が計算結果なら、ディスプレイをクリア
-    display = clearResult(display);
+    display.value = clearResult(display.value);
+
+    // ディスプレイの最初の文字が 0 なら、ディスプレイをクリア
+    display.value = removeBeginningZero(display.value);
 
     // ディスプレイに数値を追加
     display.value += value;
 
     resetFlags();
+}
+
+function onZeroClick(value) {
+
+    let display = document.getElementById('display');
+
+    if (display.value === "0") {
+        display.value = 0;
+    } else {
+        display.value += value;
+    }
+
+    resetFlags();
+
+    isZeroLastInput = true;
 }
 
 /**
@@ -118,7 +113,7 @@ function onCommaClick(value) {
     let display = document.getElementById('display');
 
     if (!isCommaLastInput) {
-        display.value += " " + value + " ";
+        display.value += value;
     }
 
     resetFlags();
@@ -126,52 +121,43 @@ function onCommaClick(value) {
     isCommaLastInput = true;
 }
 
+function onClearClick() {
+
+    let display = document.getElementById('display');
+
+    display.value = "";
+
+    resetFlags();
+}
 
 /**
- * ディスプレイに表示された計算結果をクリアするメソッド
+ * 1 文字目が 0 の場合、式をリセット
+ * @param {*} value 判定したい式
+ * @returns 空欄
+ */
+function removeBeginningZero(value) {
+    if (value.slice(0, 1) === "0") {
+        return "";
+    }
+    return value;
+}
+
+
+/**
+ * ディスプレイに表示された計算結果をクリア
  * @param {*} value ディスプレイの表示
  * @returns 空欄
  */
 function clearResult(value) {
     if (isResultDisplayed) {
         isResultDisplayed = false;
-        return "debug";
+        return "";
     }
     return value;
 }
 
 /**
- * 文字列が "0" の場合、文字列をリセットするメソッド
- * @param {*} value 判定したい文字列
- * @returns 空欄
- */
-function deleteZero(value) {
-    if (value === "0") {
-        value = "";
-    }
-    return value;
-}
-
-/**
- * 文字列が数値かどうかを判定するメソッド
- * @param {*} char 判定したい文字列
- * @returns 数値の場合 true / そうでない場合は false
- */
-function isNumeric(char) {
-    // isNan() は数値として解釈できる場合に true を返すメソッド
-    return !isNaN(char) && char.trim() !== " ";
-}
-
-/**
- * ディスプレイをクリアするメソッド
- */
-function clearDisplay() {
-    var display = document.getElementById('display');
-    display.value = '';
-}
-
-/**
- * ディスプレイの式をバックエンド（計算処理）に送信するメソッド
+ * ディスプレイの式をバックエンド（計算処理）に送信
  * @param {*} expression ディスプレイの式
  */
 function submitExpression(expression) {
