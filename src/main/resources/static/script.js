@@ -81,6 +81,51 @@ function onEqualClick() {
     isResultDisplayed = true;
 }
 
+/**
+ * 演算子ボタンをクリックした場合
+ * @param {*} value クリックされたボタンの演算子
+ */
+function onOperatorClick(value) {
+
+    // ディスプレイを取得
+    let display = document.getElementById('display');
+
+    // 演算子フラグが true の場合
+    if (isOperatorLastInput) {
+
+        // ディスプレイから余分な後ろ3文字を削除
+        display.value = display.value.slice(0, -3);
+
+        // 演算子を追加
+        display.value += " " + value + " ";
+
+    } else {
+        // 演算子を追加
+        display.value += " " + value + " ";
+    }
+
+    resetFlags();
+
+    isOperatorLastInput = true;
+}
+
+/**
+ * "." ボタンをクリックした場合
+ * @param {*} value クリックされたボタンの文字列
+ */
+function onCommaClick(value) {
+
+    let display = document.getElementById('display');
+
+    if (!isCommaLastInput) {
+        display.value += " " + value + " ";
+    }
+
+    resetFlags();
+
+    isCommaLastInput = true;
+}
+
 
 /**
  * ディスプレイに表示された計算結果をクリアするメソッド
